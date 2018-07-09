@@ -29,18 +29,21 @@ void MainComponent::initialise()
 {
     // Initialise GL objects for rendering here.
     screenNode->initializeContext();
+    image.loadImage(ImageCache::getFromMemory(BinaryData::jucelogo_png, BinaryData::jucelogo_pngSize));
 }
 
 void MainComponent::shutdown()
 {
     // Free any GL objects created for rendering here.
     screenNode->shutDownContext();
+    image.release();
 }
 
 void MainComponent::render()
 {
     // This clears the context with a black background.
     OpenGLHelpers::clear (Colours::black);
+    screenNode->BindTexture(image.getTextureID());
     screenNode->draw();
     // Add your rendering code here...
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT name="OpenGLWrapper" projectType="guiapp" jucerVersion="5.3.2"
+<JUCERPROJECT name="OpenGLWrapper" projectType="guiapp" jucerVersion="5.3.1"
               id="ZQj6Z1" defines="JUCE_OPENGL3=1">
   <MAINGROUP id="mloDHP" name="OpenGLWrapper">
     <GROUP id="{5CB97710-8185-2F28-2CA0-9C4BB1A2FDEB}" name="OpenGL">
@@ -25,6 +25,9 @@
               file="Source/OpenGL/Renderer/ScreenRenderer.h"/>
       </GROUP>
       <FILE id="JkP6qV" name="OpenGLDrawer.h" compile="0" resource="0" file="Source/OpenGL/OpenGLDrawer.h"/>
+    </GROUP>
+    <GROUP id="{0770A012-3F2F-9008-F6C9-A6C4BEE7202C}" name="Resource">
+      <FILE id="OavWez" name="juce-logo.png" compile="0" resource="1" file="Resource/juce-logo.png"/>
     </GROUP>
     <GROUP id="{7472EDA0-D2AC-58DA-1A16-876658FECF79}" name="Source">
       <FILE id="n9ENXH" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>

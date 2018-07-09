@@ -9,7 +9,7 @@
 #ifndef OpenGLDRAWER_h
 #define OpenGLDRAWER_h
 
-#include "JuceHeader.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 typedef Matrix3D<float> Matrix;
 typedef Vector3D<float> Vector;
 #include "OpenGLShapes/Shape.h"
