@@ -38,7 +38,6 @@ void MainComponent::shutdown()
 {
     // Free any GL objects created for rendering here.
     imageNode->shutDownContext();
-    screenNode->shutDownContext();
     image.release();
 }
 

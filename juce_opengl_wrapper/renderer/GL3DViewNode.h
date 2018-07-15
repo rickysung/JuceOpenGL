@@ -25,13 +25,13 @@ public:
     }
 };
     
-class GL3DViewNode : public GLRendererNode
+class GL3DViewNode : public GLOffScreenRendererNode
 {
 public:
     GL3DViewNode(OpenGLContext& glContext,
                   int screenWidth,
                   int screenHeight) :
-    GLRendererNode(glContext, screenWidth, screenHeight, 3){}
+    GLOffScreenRendererNode(glContext, screenWidth, screenHeight, 3, true){}
     void initializeShape() override
     {
 //        objectCircleShape = new ObjectCircleShape(context);
@@ -43,10 +43,6 @@ public:
 //        flatChannelShape = new FlatObjectShape(context);
 //        channelLabelShape = new RectangleShape(context, 10.0f, 1.25f);
 //        labelShape = new RectangleShape(context, 3.5f, 0.875f);
-    }
-    void initializeBuffer() override
-    {
-//        genMultisampleFrameBuffer();
     }
     void initializeUniformVariables()
     {
@@ -111,23 +107,6 @@ public:
     virtual Matrix getViewSpacePosition(Object3D* node, float x, float y, float z) = 0;
     virtual Vector getAbsolutePosition(Vector p) = 0;
     virtual void checkViewAngleChanged() = 0;
-//    virtual void resizeColorAttachment(int w, int h) override
-//    {
-//        glBindFramebuffer(GL_FRAMEBUFFER, msframeBuffer);
-//        for (GLuint i = 0; i < outputTextureNum ; i++)
-//        {
-//            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msOutputTexture[i]);
-//            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, width, height, GL_TRUE);
-//        }
-//        glDeleteRenderbuffers(1, &msrenderBuffer);
-//        glGenRenderbuffers (1, &msrenderBuffer);
-//        glBindRenderbuffer (GL_RENDERBUFFER, msrenderBuffer);
-//        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
-//        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-//        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, msrenderBuffer);
-//        
-//        GLRendererNode::resizeColorAttachment(w, h);
-//    }
 //    virtual float getListenerYaw() { return viewModel.getListenerYaw(); }
 //    virtual float getListenerPitch() { return viewModel.getListenerPitch(); }
 //    virtual void setListenerYaw(float val) { viewModel.setListenerYaw(val); }

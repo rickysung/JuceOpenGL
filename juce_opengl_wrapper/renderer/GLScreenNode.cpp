@@ -44,36 +44,18 @@ const char* GLScreenNode::getFragmentShader()
 GLScreenNode::GLScreenNode(OpenGLContext& glContext,
                                      int screenWidth,
                                      int screenHeight) :
-GLRendererNode(glContext, screenWidth, screenHeight, 1)
+GLRendererNode(glContext, screenWidth, screenHeight)
 {
 }
 void GLScreenNode::initializeUniform()
 {
     CREATE_UNIFORM(scene);
 }
-void GLScreenNode::initializeBuffer()
+void GLScreenNode::doDraw()
 {
-//    genFrameBuffer();
-}
-void GLScreenNode::preDraw()
-{
-    shaderProgram->use();
-    const float desktopScale = (float) context.getRenderingScale();
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    OpenGLHelpers::clear (Colour(BACKGROUND_COMP));// Enable depth test
-    glViewport(0, 0, width*desktopScale, height*desktopScale);
     scene->set(0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, inputTexture);
-}
-void GLScreenNode::doDraw()
-{
     screenShape->draw();
-}
-void GLScreenNode::postDraw()
-{
-    
 }
 }

@@ -9,7 +9,6 @@ bool GLFrameBuffer::initialise(OpenGLContext &context, int width, int height)
         pimpl.reset(new MultiSampleFrameBufferImpl(context, width, height, renderTargetNum, false, false));
     else
         pimpl.reset(new FrameBufferImpl (context, width, height, renderTargetNum, false, false));
-    
     if (! pimpl->createdOk())
         pimpl = nullptr;
     

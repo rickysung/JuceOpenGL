@@ -66,11 +66,6 @@ void GLBlurNode::initializeUniform()
     CREATE_UNIFORM(blurLength);// = createUniform("blurLength");
     CREATE_UNIFORM(isVertical);// = createUniform("isVertical");
 }
-void GLBlurNode::initializeBuffer()
-{
-//    genFrameBuffer();
-//    genDoubleFrameBuffer();
-}
 void GLBlurNode::shutDownContext()
 {
 //    glDeleteTextures(outputTextureNum, outputTexture.getRawDataPointer());
@@ -83,15 +78,15 @@ GLBlurNode::GLBlurNode(OpenGLContext& glContext,
                                      int screenWidth,
                                      int screenHeight,
                                      float amount) :
-GLRendererNode(glContext, screenWidth, screenHeight, 1),
+GLOffScreenRendererNode(glContext, screenWidth, screenHeight, 1, false),
 Amount(amount) {}
-void GLBlurNode::preDraw()
-{
-    shaderProgram->use();
-    blurLength->set(Amount);
-    image->set(0);
-    glViewport(0, 0, width, height);
-}
+//void GLBlurNode::preDraw()
+//{
+//    shaderProgram->use();
+//    blurLength->set(Amount);
+//    image->set(0);
+//    glViewport(0, 0, width, height);
+//}
 void GLBlurNode::doDraw()
 {
 //    glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[0]);
@@ -108,8 +103,8 @@ void GLBlurNode::doDraw()
 //    glBindTexture(GL_TEXTURE_2D, pingpongBuffer[0]);
 //    screenShape->draw();
 }
-void GLBlurNode::postDraw()
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
+//void GLBlurNode::postDraw()
+//{
+//    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//}
 }

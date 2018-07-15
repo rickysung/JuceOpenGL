@@ -78,6 +78,7 @@ namespace juce
 #include "frame_buffer/GLFrameBufferMultiSample_impl.h"
 #include "frame_buffer/GLFrameBuffer.h"
 #include "renderer/GLRendererNode.h"
+#include "renderer/GLOffScreenRendererNode.h"
 #include "renderer/GLImageRenderNode.h"
 #include "renderer/GLScreenNode.h"
 #include "renderer/GLBlurNode.h"

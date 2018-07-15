@@ -30,10 +30,10 @@ const char* GLImageRenderNode::getFragmentShader()
     "void main()\n"
     "{\n"
     "   vec3 result = texture(scene, TexCoords).rgb;\n"
-    "   FragColor = vec4(result, 1.0);\n"
+    "   FragColor = vec4(0.5*result, 1.0);\n"
     "}";
 }
-GLImageRenderNode::GLImageRenderNode(OpenGLContext& context, int width, int height) : GLRendererNode(context, width, height, 1)
+GLImageRenderNode::GLImageRenderNode(OpenGLContext& context, int width, int height) : GLOffScreenRendererNode(context, width, height, 1, true)
 {
     
 }
@@ -41,23 +41,11 @@ void GLImageRenderNode::initializeUniform()
 {
     CREATE_UNIFORM(scene);
 }
-void GLImageRenderNode::preDraw()
+void GLImageRenderNode::doDraw()
 {
-    shaderProgram->use();
-    framebuffer.makeCurrentRenderingTarget();
-    OpenGLHelpers::clear (Colour(BACKGROUND_COMP));
-    glViewport(0, 0, width, height);
-    
     scene->set(0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, inputTexture);
-}
-void GLImageRenderNode::doDraw()
-{
     screenShape->draw();
-}
-void GLImageRenderNode::postDraw()
-{
-    framebuffer.releaseAsRenderingTarget();
 }
 }
