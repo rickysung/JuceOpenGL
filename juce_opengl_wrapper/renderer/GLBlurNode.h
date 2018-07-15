@@ -26,16 +26,16 @@ public:
     {
         inputTexture = textureID;
     }
-    void resizeColorAttachment(int w, int h) override
-    {
-        for (unsigned int i = 0; i < 2; i++)
-        {
-            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
-            glBindTexture(GL_TEXTURE_2D, pingpongBuffer[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-        }
-        GLRendererNode::resizeColorAttachment(w, h);
-    }
+//    void resizeColorAttachment(int w, int h) override
+//    {
+//        for (unsigned int i = 0; i < 2; i++)
+//        {
+//            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+//            glBindTexture(GL_TEXTURE_2D, pingpongBuffer[i]);
+//            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+//        }
+//        GLRendererNode::resizeColorAttachment(w, h);
+//    }
     
 private:
     virtual const char* getVertexShader() override;

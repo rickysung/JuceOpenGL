@@ -7,5 +7,9 @@ header files that the compiler may be using.
 #error "Incorrect use of JUCE cpp file"
 #endif
 #include "juce_opengl_wrapper.h"
+#include "frame_buffer/GLFrameBuffer_impl.cpp"
+#include "frame_buffer/GLFrameBufferMultiSample_impl.cpp"
+#include "frame_buffer/GLFrameBuffer.cpp"
 #include "renderer/GLBlurNode.cpp"
 #include "renderer/GLScreenNode.cpp"
+#include "renderer/GLImageRenderNode.cpp"

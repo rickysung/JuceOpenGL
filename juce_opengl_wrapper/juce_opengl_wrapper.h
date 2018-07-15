@@ -63,6 +63,7 @@ namespace juce
 {
     class GLVertexSet;
     class GLShape;
+    class GLFrameBuffer;
     class GLRendererNode;
     class WavefrontObjFile;
     
@@ -73,7 +74,11 @@ namespace juce
 #include "shape/WavefrontObjParser.h"
 #include "shape/GLVertexSet.h"
 #include "shape/GLShape.h"
+#include "frame_buffer/GLFrameBuffer_impl.h"
+#include "frame_buffer/GLFrameBufferMultiSample_impl.h"
+#include "frame_buffer/GLFrameBuffer.h"
 #include "renderer/GLRendererNode.h"
+#include "renderer/GLImageRenderNode.h"
 #include "renderer/GLScreenNode.h"
 #include "renderer/GLBlurNode.h"
 #include "renderer/GL3DViewNode.h"

@@ -15,6 +15,7 @@ MainComponent::MainComponent()
     // you add any child components.
     setSize (800, 600);
     openGLContext.setOpenGLVersionRequired(juce::OpenGLContext::OpenGLVersion::openGL3_2);
+    imageNode.reset(new GLImageRenderNode(openGLContext, getWidth(), getHeight()));
     screenNode.reset(new GLScreenNode(openGLContext, getWidth(), getHeight()));
 }
 
@@ -29,12 +30,14 @@ void MainComponent::initialise()
 {
     // Initialise GL objects for rendering here.
     screenNode->initializeContext();
+    imageNode->initializeContext();
     image.loadImage(ImageCache::getFromMemory(BinaryData::jucelogo_png, BinaryData::jucelogo_pngSize));
 }
 
 void MainComponent::shutdown()
 {
     // Free any GL objects created for rendering here.
+    imageNode->shutDownContext();
     screenNode->shutDownContext();
     image.release();
 }
@@ -43,7 +46,9 @@ void MainComponent::render()
 {
     // This clears the context with a black background.
     OpenGLHelpers::clear (Colours::black);
-    screenNode->BindTexture(image.getTextureID());
+    imageNode->BindTexture(image.getTextureID());
+    imageNode->draw();
+    screenNode->BindTexture(imageNode->getTexture(0));
     screenNode->draw();
     // Add your rendering code here...
 }

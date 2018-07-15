@@ -73,12 +73,12 @@ public:
     }
     void shutDownContext() override
     {
-        glDeleteTextures(outputTextureNum, msOutputTexture.getRawDataPointer());
-        context.extensions.glDeleteRenderbuffers(1, &msrenderBuffer);
-        context.extensions.glDeleteFramebuffers(1, &msframeBuffer);
-        glDeleteTextures(outputTextureNum, outputTexture.getRawDataPointer());
-        context.extensions.glDeleteRenderbuffers(1, &renderBuffer);
-        context.extensions.glDeleteFramebuffers(1, &frameBuffer);
+//        glDeleteTextures(outputTextureNum, msOutputTexture.getRawDataPointer());
+//        context.extensions.glDeleteRenderbuffers(1, &msrenderBuffer);
+//        context.extensions.glDeleteFramebuffers(1, &msframeBuffer);
+//        glDeleteTextures(outputTextureNum, outputTexture.getRawDataPointer());
+//        context.extensions.glDeleteRenderbuffers(1, &renderBuffer);
+//        context.extensions.glDeleteFramebuffers(1, &frameBuffer);
     }
     void BindAmbisonicTexture(GLuint inputTexture)
     {
@@ -111,23 +111,23 @@ public:
     virtual Matrix getViewSpacePosition(Object3D* node, float x, float y, float z) = 0;
     virtual Vector getAbsolutePosition(Vector p) = 0;
     virtual void checkViewAngleChanged() = 0;
-    virtual void resizeColorAttachment(int w, int h) override
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, msframeBuffer);
-        for (GLuint i = 0; i < outputTextureNum ; i++)
-        {
-            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msOutputTexture[i]);
-            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, width, height, GL_TRUE);
-        }
-        glDeleteRenderbuffers(1, &msrenderBuffer);
-        glGenRenderbuffers (1, &msrenderBuffer);
-        glBindRenderbuffer (GL_RENDERBUFFER, msrenderBuffer);
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, msrenderBuffer);
-        
-        GLRendererNode::resizeColorAttachment(w, h);
-    }
+//    virtual void resizeColorAttachment(int w, int h) override
+//    {
+//        glBindFramebuffer(GL_FRAMEBUFFER, msframeBuffer);
+//        for (GLuint i = 0; i < outputTextureNum ; i++)
+//        {
+//            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msOutputTexture[i]);
+//            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, width, height, GL_TRUE);
+//        }
+//        glDeleteRenderbuffers(1, &msrenderBuffer);
+//        glGenRenderbuffers (1, &msrenderBuffer);
+//        glBindRenderbuffer (GL_RENDERBUFFER, msrenderBuffer);
+//        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+//        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+//        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, msrenderBuffer);
+//        
+//        GLRendererNode::resizeColorAttachment(w, h);
+//    }
 //    virtual float getListenerYaw() { return viewModel.getListenerYaw(); }
 //    virtual float getListenerPitch() { return viewModel.getListenerPitch(); }
 //    virtual void setListenerYaw(float val) { viewModel.setListenerYaw(val); }

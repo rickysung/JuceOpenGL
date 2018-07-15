@@ -68,16 +68,16 @@ void GLBlurNode::initializeUniform()
 }
 void GLBlurNode::initializeBuffer()
 {
-    genFrameBuffer();
-    genDoubleFrameBuffer();
+//    genFrameBuffer();
+//    genDoubleFrameBuffer();
 }
 void GLBlurNode::shutDownContext()
 {
-    glDeleteTextures(outputTextureNum, outputTexture.getRawDataPointer());
-    context.extensions.glDeleteRenderbuffers(1, &renderBuffer);
-    context.extensions.glDeleteFramebuffers(1, &frameBuffer);
-    glDeleteTextures(2, pingpongBuffer);
-    context.extensions.glDeleteFramebuffers(2, pingpongFBO);
+//    glDeleteTextures(outputTextureNum, outputTexture.getRawDataPointer());
+//    context.extensions.glDeleteRenderbuffers(1, &renderBuffer);
+//    context.extensions.glDeleteFramebuffers(1, &frameBuffer);
+//    glDeleteTextures(2, pingpongBuffer);
+//    context.extensions.glDeleteFramebuffers(2, pingpongFBO);
 }
 GLBlurNode::GLBlurNode(OpenGLContext& glContext,
                                      int screenWidth,
@@ -94,19 +94,19 @@ void GLBlurNode::preDraw()
 }
 void GLBlurNode::doDraw()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[0]);
-    OpenGLHelpers::clear (Colour::greyLevel (0.1f));// Enable depth test
-    isVertical->set(true);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, inputTexture);
-    screenShape->draw();
-
-    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-    OpenGLHelpers::clear (Colour::greyLevel (0.1f));// Enable depth test
-    isVertical->set(false);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, pingpongBuffer[0]);
-    screenShape->draw();
+//    glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[0]);
+//    OpenGLHelpers::clear (Colour::greyLevel (0.1f));// Enable depth test
+//    isVertical->set(true);
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_2D, inputTexture);
+//    screenShape->draw();
+//
+//    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+//    OpenGLHelpers::clear (Colour::greyLevel (0.1f));// Enable depth test
+//    isVertical->set(false);
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_2D, pingpongBuffer[0]);
+//    screenShape->draw();
 }
 void GLBlurNode::postDraw()
 {

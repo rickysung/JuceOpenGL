@@ -53,7 +53,7 @@ void GLScreenNode::initializeUniform()
 }
 void GLScreenNode::initializeBuffer()
 {
-    genFrameBuffer();
+//    genFrameBuffer();
 }
 void GLScreenNode::preDraw()
 {
