@@ -15,7 +15,7 @@ MainComponent::MainComponent()
     // you add any child components.
     setSize (800, 600);
     openGLContext.setOpenGLVersionRequired(juce::OpenGLContext::OpenGLVersion::openGL3_2);
-    screenNode.reset(new ScreenRenderer(openGLContext, getWidth(), getHeight()));
+    screenNode.reset(new GLScreenNode(openGLContext, getWidth(), getHeight()));
 }
 
 MainComponent::~MainComponent()

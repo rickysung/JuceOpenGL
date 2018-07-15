@@ -1,15 +1,15 @@
 /*
   ==============================================================================
 
-    ScreenRenderer.cpp
+    GLScreenNode.cpp
     Created: 20 Aug 2016 8:19:03pm
     Author:  Ricky
 
   ==============================================================================
 */
-
-#include "ScreenRenderer.h"
-const char* ScreenRenderer::getVertexShader()
+namespace juce{
+#include "GLScreenNode.h"
+const char* GLScreenNode::getVertexShader()
 {
     return
     "#version 330 core\n"
@@ -25,7 +25,7 @@ const char* ScreenRenderer::getVertexShader()
     "    TexCoords = textureCoordIn;\n"
     "}";
 }
-const char* ScreenRenderer::getFragmentShader()
+const char* GLScreenNode::getFragmentShader()
 {
     return
     "#version 330 core\n"
@@ -41,21 +41,21 @@ const char* ScreenRenderer::getFragmentShader()
     "   FragColor = vec4(result, 1.0);\n"
     "}";
 }
-ScreenRenderer::ScreenRenderer(OpenGLContext& glContext,
+GLScreenNode::GLScreenNode(OpenGLContext& glContext,
                                      int screenWidth,
                                      int screenHeight) :
-OpenGLDrawer(glContext, screenWidth, screenHeight, 1)
+GLRendererNode(glContext, screenWidth, screenHeight, 1)
 {
 }
-void ScreenRenderer::initializeUniform()
+void GLScreenNode::initializeUniform()
 {
     CREATE_UNIFORM(scene);
 }
-void ScreenRenderer::initializeBuffer()
+void GLScreenNode::initializeBuffer()
 {
     genFrameBuffer();
 }
-void ScreenRenderer::preDraw()
+void GLScreenNode::preDraw()
 {
     shaderProgram->use();
     const float desktopScale = (float) context.getRenderingScale();
@@ -68,11 +68,12 @@ void ScreenRenderer::preDraw()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, inputTexture);
 }
-void ScreenRenderer::doDraw()
+void GLScreenNode::doDraw()
 {
     screenShape->draw();
 }
-void ScreenRenderer::postDraw()
+void GLScreenNode::postDraw()
 {
     
+}
 }

@@ -8,15 +8,13 @@
   ==============================================================================
 */
 
-#ifndef SCREENRENDERER_H_INCLUDED
-#define SCREENRENDERER_H_INCLUDED
-#include "../OpenGLDrawer.h"
+#pragma once
+namespace juce{
 
-
-class ScreenRenderer : public OpenGLDrawer
+class GLScreenNode : public GLRendererNode
 {
 public:
-    ScreenRenderer(OpenGLContext& glContext,
+    GLScreenNode(OpenGLContext& glContext,
                       int screenWidth,
                       int screenHeight);
     
@@ -37,7 +35,4 @@ private:
     ScopedPointer<OpenGLShaderProgram::Uniform> scene;
 };
 
-
-
-
-#endif  // SCREENRENDERER_H_INCLUDED
+}

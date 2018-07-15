@@ -9,7 +9,6 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "OpenGL/Renderer/ScreenRenderer.h"
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all
@@ -35,7 +34,7 @@ private:
     //==============================================================================
     // Your private member variables go here...
     OpenGLTexture image;
-    std::unique_ptr<ScreenRenderer> screenNode;
+    std::unique_ptr<GLScreenNode> screenNode;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

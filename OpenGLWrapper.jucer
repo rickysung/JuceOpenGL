@@ -3,29 +3,6 @@
 <JUCERPROJECT name="OpenGLWrapper" projectType="guiapp" jucerVersion="5.3.1"
               id="ZQj6Z1" defines="JUCE_OPENGL3=1">
   <MAINGROUP id="mloDHP" name="OpenGLWrapper">
-    <GROUP id="{5CB97710-8185-2F28-2CA0-9C4BB1A2FDEB}" name="OpenGL">
-      <GROUP id="{9E50F2D4-BBB7-773B-16DD-D7288ED76992}" name="OpenGLShapes">
-        <FILE id="qzVpG1" name="Shape.h" compile="0" resource="0" file="Source/OpenGL/OpenGLShapes/Shape.h"/>
-        <FILE id="rvX66Z" name="ShapeVertex.h" compile="0" resource="0" file="Source/OpenGL/OpenGLShapes/ShapeVertex.h"/>
-        <FILE id="Hsif9c" name="WavefrontObjParser.h" compile="0" resource="0"
-              file="Source/OpenGL/OpenGLShapes/WavefrontObjParser.h"/>
-      </GROUP>
-      <GROUP id="{116183FC-4CFF-6705-5D36-1907295D9879}" name="Renderer">
-        <FILE id="gmvSWZ" name="GaussianBlurRenderer.cpp" compile="1" resource="0"
-              file="Source/OpenGL/Renderer/GaussianBlurRenderer.cpp"/>
-        <FILE id="KhEGAQ" name="GaussianBlurRenderer.h" compile="0" resource="0"
-              file="Source/OpenGL/Renderer/GaussianBlurRenderer.h"/>
-        <FILE id="FkW7Qb" name="GlowRenderer.cpp" compile="1" resource="0"
-              file="Source/OpenGL/Renderer/GlowRenderer.cpp"/>
-        <FILE id="Wf2R1s" name="GlowRenderer.h" compile="0" resource="0" file="Source/OpenGL/Renderer/GlowRenderer.h"/>
-        <FILE id="IpD8QK" name="NodeRenderer.h" compile="0" resource="0" file="Source/OpenGL/Renderer/NodeRenderer.h"/>
-        <FILE id="atP5kV" name="ScreenRenderer.cpp" compile="1" resource="0"
-              file="Source/OpenGL/Renderer/ScreenRenderer.cpp"/>
-        <FILE id="wtsdhv" name="ScreenRenderer.h" compile="0" resource="0"
-              file="Source/OpenGL/Renderer/ScreenRenderer.h"/>
-      </GROUP>
-      <FILE id="JkP6qV" name="OpenGLDrawer.h" compile="0" resource="0" file="Source/OpenGL/OpenGLDrawer.h"/>
-    </GROUP>
     <GROUP id="{0770A012-3F2F-9008-F6C9-A6C4BEE7202C}" name="Resource">
       <FILE id="OavWez" name="juce-logo.png" compile="0" resource="1" file="Resource/juce-logo.png"/>
     </GROUP>
@@ -60,6 +37,7 @@
         <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
         <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
         <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl_wrapper" path="."/>
       </MODULEPATHS>
     </XCODE_MAC>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.17134.0"
@@ -82,6 +60,7 @@
         <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
         <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
         <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl_wrapper" path="."/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>
@@ -98,6 +77,7 @@
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_opengl_wrapper" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_video" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
   </MODULES>
   <JUCEOPTIONS/>

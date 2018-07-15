@@ -8,10 +8,8 @@
   ==============================================================================
 */
 
-#ifndef SHAPEVERTEX_H_INCLUDED
-#define SHAPEVERTEX_H_INCLUDED
-#include "WavefrontObjParser.h"
-
+#pragma once
+namespace juce{
 #define BACKGROUND_MAIN                     0xff000000
 #define BACKGROUND_COMP                     0xff1B1B1B
 #define BACKGROUND_STRK                     0xff121212
@@ -31,11 +29,11 @@ struct Vertex
     float colour[4];
     float texCoord[2];
 };
-struct InstancedShapeVertex
+struct GLInstancedVertexSet
 {
 public:
-    InstancedShapeVertex(){}
-    virtual ~InstancedShapeVertex(){}
+    GLInstancedVertexSet(){}
+    virtual ~GLInstancedVertexSet(){}
     virtual void initShape(OpenGLContext& context, float cof1, float cof2, float cof3) = 0;
     void deleteShape(OpenGLContext& context)
     {
@@ -52,7 +50,7 @@ protected:
     Array<Vertex> vertices;
     Array<uint32> indecies;
     GLuint shapeVBO, shapeEBO, shapeIBO;
-    void putData(OpenGLContext& context, Array<Vertex>& vertices, Array<uint32>& indecies)
+    void putData(OpenGLContext& context)
     {
         context.extensions.glBindBuffer (GL_ARRAY_BUFFER, shapeIBO);
         context.extensions.glBufferData (GL_ARRAY_BUFFER,
@@ -110,7 +108,7 @@ protected:
         context.extensions.glGenBuffers (1, &shapeEBO);
         context.extensions.glGenBuffers (1, &shapeIBO);
         context.extensions.glBindVertexArray(shapeVAO);
-        putData(context, vertices, indecies);
+        putData(context);
         enableVertexArray(context);
         context.extensions.glBindVertexArray(0);
         vertexSize = indecies.size();
@@ -130,10 +128,10 @@ protected:
         return r;
     }
 };
-struct ShapeVertex
+struct GLVertexSet
 {
-    ShapeVertex(){}
-    virtual ~ShapeVertex()
+    GLVertexSet(){}
+    virtual ~GLVertexSet()
     {
     }
     void buildArcLine(Vector v1, Vector v2, float thickness)// p1 and p2 contains Azimuth Elevation Distance sequence
@@ -373,7 +371,7 @@ protected:
     }
 };
 
-struct WavefrontVertex : ShapeVertex
+struct WavefrontVertex : GLVertexSet
 {
     WavefrontVertex(WavefrontObjFile::Mesh& m, Colour c) : mesh(m), colour(c)
     {
@@ -431,7 +429,7 @@ struct WavefrontVertex : ShapeVertex
     WavefrontObjFile::Mesh& mesh;
     Colour colour;
 };
-struct CubeVertex : ShapeVertex
+struct CubeVertex : GLVertexSet
 {
     void initShape(OpenGLContext& context, float cof1 = 0, float cof2 = 0, float cof3 = 0) override
     {
@@ -560,198 +558,7 @@ struct CubeVertex : ShapeVertex
         initVertexArray(context);
     }
 };
-struct FanVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float horizonAngle, float cof2 = 0, float cof3 = 0) override
-    {
-        Vertex vert;
-        Colour g = Colour(SHADOW_COLOR);
-        int i;
-        float ang;
-        float x, y;
-        indecies.add(0);
-        vert = {{0,0,0},{0,1,0},{g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},{0.5,0.5}};
-        vertices.add(vert);
-        for(i=0 ; i<=div ; i++)
-        {
-            ang = i*horizonAngle/div - horizonAngle/2;
-            x = std::sin(ang);
-            y = std::cos(ang);
-            vert = {{x,0,y},{0,1,0},{g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},{0.5,0.5}};
-            vertices.add(vert);
-            indecies.add(i+1);
-        }
-        initVertexArray(context);
-    }
-    void setAngle(OpenGLContext& context, float horizonAngle)
-    {
-        Vertex vert;
-        Colour g = Colour(SHADOW_COLOR);
-        int i;
-        float x, y;
-        float ang;
-        context.extensions.glBindVertexArray(shapeVAO);
-        context.extensions.glBindBuffer(GL_ARRAY_BUFFER, shapeVBO);
-        for(i=0 ; i<=div ; i++)
-        {
-            ang = i*horizonAngle/div - horizonAngle/2;
-            x = std::sin(ang);
-            y = std::cos(ang);
-            vert = {{x,0,y},{0,1,0},{g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},{0.5,0.5}};
-            context.extensions.glBufferSubData(GL_ARRAY_BUFFER, sizeof(Vertex)*(i+1), sizeof(Vertex), &vert);
-        }
-        context.extensions.glBindVertexArray(0);
-    }
-    int div = 36;
-};
-struct ShadowVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1 = 0, float cof2 = 0, float cof3 = 0) override
-    {
-        Vertex vert;
-        Colour g = Colour(SHADOW_COLOR);
-        int i;
-        int div = 72;
-        float ang;
-        float x, y;
-        indecies.add(0);
-        vert = {{0,0,0},{0,1,0},{g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},{0.5,0.5}};
-        vertices.add(vert);
-        for(i=0 ; i<=div ; i++)
-        {
-            ang = i*2*M_PI/div;
-            x = std::cos(ang);
-            y = std::sin(ang);
-            vert = {{x,0,y},{0,1,0},{g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},{0.5,0.5}};
-            vertices.add(vert);
-            indecies.add(i+1);
-        }
-        initVertexArray(context);
-    }
-};
-struct CursorVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1 = 0, float cof2 = 0, float cof3 = 0) override
-    {
-        Vertex vert;
-        Colour g = Colour(GRID_LINE);
-        vert = {
-            {0, 0, 0},
-            {0, 0, 1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.5, 0.5}
-        };
-        vertices.add(vert);
-        indecies.add(0);
-        vert = {
-            {200, 0, 200},
-            {0, 0, 1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.5, 0.5}
-        };
-        vertices.add(vert);
-        indecies.add(1);
-        vert = {
-            {200, 200, 200},
-            {0, 0, 1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.5, 0.5}
-        };
-        vertices.add(vert);
-        indecies.add(2);
-        initVertexArray(context);    }
-    void setPoint(OpenGLContext& context, Vector p)
-    {
-        Vertex ground;
-        Vertex pos;
-        Colour g = Colour(GRID_LINE);
-        ground = {
-            {p.x, 0, p.z},
-            {0, 0, 1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.5, 0.5}
-        };
-        pos = {
-            {p.x, p.y, p.z},
-            {0, 0, 1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.5, 0.5}
-        };
-        context.extensions.glBindVertexArray(shapeVAO);
-        context.extensions.glBindBuffer(GL_ARRAY_BUFFER, shapeVBO);
-        context.extensions.glBufferSubData(GL_ARRAY_BUFFER, sizeof(Vertex), sizeof(Vertex), &ground);
-        context.extensions.glBufferSubData(GL_ARRAY_BUFFER, sizeof(Vertex)*2, sizeof(Vertex), &pos);
-    }
-};
-struct LineVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1 = 1, float cof2 = 0, float cof3 = 0) override
-    {
-        
-    }
-    void initShape(OpenGLContext& context, float thickness, Colour lineColour, Vector p1, Vector p2 = Vector(0,0,0))
-    {
-        buildStraightLine(p1, p2, thickness, lineColour);
-        initVertexArray(context);
-    }
-};
-struct SphereGridVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1 = 1, float cof2 = 6, float cof3 = 0) override
-    {
-        Vertex vert;
-        Colour g = Colour(GRID_LINE);
-        int i, j;
-        const int n = cof2;
-        float idx[100][50] = {0,};
-        float diff = M_PI/n;
-        float azi, elv;
-        int cnt=0;
-        float u;
-        float v;
-        for(i = 0 ; i<=2*n ; i++)
-        {
-            for(j=0 ; j<=n ; j++)
-            {
-                elv = M_PI_2 - diff * (float)j;
-                azi = M_PI - diff * (float)i;
-                
-                u = static_cast<float>(j)/n;
-                v = static_cast<float>(i)/(2*n);
-                vert = {
-                    {cof1*std::cos(elv) * std::sin(azi), cof1*std::sin(elv), cof1*std::cos(elv)*std::cos(azi)},
-                    {std::cos(elv) * std::sin(azi), std::cos(elv), std::cos(elv)*std::cos(azi)},
-                    {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-                    {v, u}
-                };
-                vertices.add(vert);
-                idx[i][j] = cnt++;
-            }
-        }
-        for(j=0 ; j<n ; j++)
-        {
-            for(i=0 ; i<2*n ; i++)
-            {
-                indecies.add(idx[i][j]);
-                indecies.add(idx[i][j+1]);
-                indecies.add(idx[i][j]);
-                indecies.add(idx[i+1][j]);
-            }
-        }
-        for(j=0 ; j<n ; j++)
-        {
-            indecies.add(idx[i][j]);
-            indecies.add(idx[i][j+1]);
-        }
-        for(i=0 ; i<2*n ; i++)
-        {
-            indecies.add(idx[i][j]);
-            indecies.add(idx[i+1][j]);
-        }
-        initVertexArray(context);
-    }
-};
-struct SphereVertex : ShapeVertex
+struct SphereVertex : GLVertexSet
 {
     void initShape(OpenGLContext& context, float cof1 = 1, float cof2 = 0, float cof3 = 0) override
     {
@@ -799,137 +606,7 @@ struct SphereVertex : ShapeVertex
         initVertexArray(context);
     }
 };
-struct AmbisonicPointsVertex : InstancedShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1 = 1, float cof2 = 0, float cof3 = 0) override
-    {
-        Vertex vert;
-        Colour g = Colour(GRID_LINE);
-        
-        int vertexCount = 60;
-        float radius = 1.0f;
-        float center_x = 0.0f;
-        float center_y = 0.0f;
-        
-        // Create a buffer for vertex data
-        float buffer[120]; // (x,y) for each vertex
-        int idx = 0;
-        
-        // Center vertex for triangle fan
-        buffer[idx++] = center_x;
-        buffer[idx++] = center_y;
-        
-        // Outer vertices of the circle
-        int outerVertexCount = vertexCount - 1;
-        
-        for (int i = 0; i < outerVertexCount; ++i)
-        {
-            float percent = (i / (float) (outerVertexCount - 1));
-            float rad = percent * 2*M_PI;
-            
-            //Vertex position
-            float outer_x = center_x + radius * cos(rad);
-            float outer_y = center_y + radius * sin(rad);
-            
-            buffer[idx++] = outer_x;
-            buffer[idx++] = outer_y;
-        }
-        
-        for(int i = 0; i < 60; i++)
-        {
-            vert = {
-                {buffer[i*2],buffer[i*2+1],0.0f},
-                {0.0f, 0.0f, 0.0f},
-                {1.0, 1.0, 1.0, 1.0},
-                {1.0, 1.0}
-            };
-            
-            vertices.add(vert);
-        }
-        for(int idx = 0; idx<60; idx++)
-        {
-            indecies.add(0);
-            indecies.add(idx+1);
-            indecies.add(idx+2);
-        }
-        int n = 72;
-        int cnt = 0;
-        float diff = 2*M_PI/n;
-        Matrix t;
-        for(int i=1 ; i<n ; i++, cnt++)
-        {
-            t = getModelMatrixAtPosition(M_PI_2, (i)*diff, 0);
-            matrices.add(t);
-        }
-        for(int i=1 ; i<n ; i++, cnt++)
-        {
-            t = getModelMatrixAtPosition((i)*diff, 0, 0);
-            matrices.add(t);
-        }
-        instanceSize = cnt;
-        initVertexArray(context);
-    }
-};
-
-struct ObjectCircleVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1 = 1, float cof2 = 0, float cof3 = 0) override
-    {
-        Vertex vert;
-        Colour g = Colour(GRID_LINE);
-        
-        int vertexCount = 60;
-        float radius = 1.0f;
-        float center_x = 0.0f;
-        float center_y = 0.0f;
-        
-        // Create a buffer for vertex data
-        float buffer[120]; // (x,y) for each vertex
-        int idx = 0;
-        
-        // Center vertex for triangle fan
-        buffer[idx++] = center_x;
-        buffer[idx++] = center_y;
-        
-        // Outer vertices of the circle
-        int outerVertexCount = vertexCount-1;
-        
-        for (int i = 0; i < outerVertexCount; ++i)
-        {
-            float percent = (i / (float) (outerVertexCount-1));
-            float rad = percent * 2*M_PI;
-            
-            //Vertex position
-            float outer_x = center_x + radius * cos(rad);
-            float outer_y = center_y + radius * sin(rad);
-            
-            buffer[idx++] = outer_x;
-            buffer[idx++] = outer_y;
-        }
-        
-        for(int i = 0; i < 60; i++)
-        {
-            vert = {
-                {buffer[i*2],buffer[i*2+1],0.0f},
-                {0.0f, 0.0f, 0.0f},
-                {1.0, 1.0, 1.0, 1.0},
-                {1.0, 1.0}
-            };
-            
-            vertices.add(vert);
-        }
-        for(int idx = 0; idx<60; idx++)
-        {
-            indecies.add(0);
-            indecies.add(idx+1);
-            indecies.add(idx+2);
-        }
-        
-        initVertexArray(context);
-    }
-};
-
-struct EllipseVertex : ShapeVertex
+struct EllipseVertex : GLVertexSet
 {
     void initShape(OpenGLContext& context, float cof1 = 1, float cof2 = 0, float cof3 = 0) override
     {
@@ -944,69 +621,7 @@ struct EllipseVertex : ShapeVertex
         initVertexArray(context);
     }
 };
-struct UVSphereVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1 = 1, float cof2 =0, float cof3 = 0) override
-    {
-        Colour g = Colour(GRID_LINE);
-        int n = 180;
-        int m = 12;
-        int i, j;
-        float rad = cof1;
-        for(j=1 ; j<18 ; j++)
-        {
-            for(i=0 ; i<n ; i++)
-            {
-                buildArcLine(Vector(2*M_PI*(float)i/n, -M_PI_2 + M_PI * (float)j/m, rad), Vector(2*M_PI*(float)(i+1)/n, -M_PI_2 + M_PI * (float)j/m, rad), 1);
-            }
-        }
-        for(j=0 ; j<36 ; j++)
-        {
-            for(i=0 ; i<n ; i++)
-            {
-                buildArcLine(Vector(-M_PI_2 + M_PI * (float)j/m, 2*M_PI*(float)i/n, rad), Vector(-M_PI_2 + M_PI * (float)j/m, 2*M_PI*(float)(i+1)/n, rad), 1);
-            }
-        }
-        initVertexArray(context);
-    }
-};
-struct FlatEllipseVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1 = 1, float cof2 = 0, float cof3 = 0) override
-    {
-        Vertex vert;
-        Colour g = Colour(GRID_LINE);
-        int n=36;
-        int i;
-        float rad = 1.0;
-        float ang;
-        float thick = cof1;
-        for(i=1 ; i<=n+1 ; i++)
-        {
-            ang = 2*M_PI*(float)(i-1)/n;
-            vert = {
-                {rad * std::cos(ang),rad * std::sin(ang), 0},
-                {std::sin(ang), std::cos(ang),0},
-                {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-                {0.5,0.5}};
-            vertices.add(vert);
-            vert = {
-                {(rad-thick) * std::cos(ang),(rad-thick) * std::sin(ang), 0},
-                {std::sin(ang), std::cos(ang),0},
-                {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-                {0.5,0.5}};
-            vertices.add(vert);
-            indecies.add(i*2-2);
-            indecies.add(i*2-1);
-            indecies.add(i*2);
-            indecies.add(i*2-1);
-            indecies.add(i*2);
-            indecies.add(i*2+1);
-        }
-        initVertexArray(context);
-    }
-};
-struct RectangleVertex : ShapeVertex
+struct RectangleVertex : GLVertexSet
 {
     void initShape(OpenGLContext& context, float x=1, float y = 1, float cof3 = 0) override
     {
@@ -1045,97 +660,4 @@ struct RectangleVertex : ShapeVertex
         initVertexArray(context);
     }
 };
-struct FlatRectangleVertex : ShapeVertex
-{
-    void initShape(OpenGLContext& context, float cof1=1, float cof2 = 1, float cof3 = 0) override
-    {
-        Vertex vert;
-        float lineDiff = 0.82f;
-        Colour g = Colour(0xFFFFFFFF);
-        vert = {
-            {-cof1,cof2,0},
-            {0,0,1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.0,1.0}};
-        vertices.add(vert);
-        vert = {
-            {cof1,cof2,0},
-            {0,0,1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {1.0,1.0}};
-        vertices.add(vert);
-        vert = {
-            {cof1,-cof2,0},
-            {0,0,1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {1.0,0.0}};
-        vertices.add(vert);
-        vert = {
-            {-cof1,-cof2,0},
-            {0,0,1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.0,0.0}};
-        vertices.add(vert);
-        
-        vert = {
-            {-cof1*lineDiff,cof2*lineDiff,0},
-            {0,0,1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.0,1.0}};
-        vertices.add(vert);
-        vert = {
-            {cof1*lineDiff,cof2*lineDiff,0},
-            {0,0,1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {1.0,1.0}};
-        vertices.add(vert);
-        vert = {
-            {cof1*lineDiff,-cof2*lineDiff,0},
-            {0,0,1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {1.0,0.0}};
-        vertices.add(vert);
-        vert = {
-            {-cof1*lineDiff,-cof2*lineDiff,0},
-            {0,0,1},
-            {g.getFloatRed(), g.getFloatGreen(), g.getFloatBlue(), g.getFloatAlpha()},
-            {0.0,0.0}};
-        
-        vertices.add(vert);
-        
-        indecies.add(0);
-        indecies.add(4);
-        indecies.add(3);
-        
-        indecies.add(0);
-        indecies.add(1);
-        indecies.add(4);
-        
-        indecies.add(4);
-        indecies.add(1);
-        indecies.add(5);
-        
-        indecies.add(3);
-        indecies.add(4);
-        indecies.add(7);
-        
-        indecies.add(3);
-        indecies.add(7);
-        indecies.add(2);
-        
-        indecies.add(2);
-        indecies.add(7);
-        indecies.add(6);
-        
-        indecies.add(5);
-        indecies.add(1);
-        indecies.add(2);
-        
-        indecies.add(5);
-        indecies.add(2);
-        indecies.add(6);
-        
-        initVertexArray(context);
-    }
-};
-#endif  // SHAPEVERTEX_H_INCLUDED
+}

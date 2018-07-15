@@ -6,20 +6,15 @@
 //
 //
 
-#ifndef OpenGLDRAWER_h
-#define OpenGLDRAWER_h
-
-#include "../JuceLibraryCode/JuceHeader.h"
-typedef Matrix3D<float> Matrix;
-typedef Vector3D<float> Vector;
-#include "OpenGLShapes/Shape.h"
-
+#pragma once
+namespace juce{
+    
 #define CREATE_UNIFORM(var) var = createUniform(#var)
 
-class OpenGLDrawer
+class GLRendererNode
 {
 public:
-    OpenGLDrawer(OpenGLContext& openGLContext,
+    GLRendererNode(OpenGLContext& openGLContext,
                     int screenWidth,
                     int screenHeight,
                     int renderTargetNum) :
@@ -29,7 +24,7 @@ public:
     viewportX(0), viewportY(0), viewportWidth(screenWidth), viewportHeight(screenHeight),
     outputTextureNum(renderTargetNum)
     {}
-    virtual ~OpenGLDrawer(){}
+    virtual ~GLRendererNode(){}
     OpenGLShaderProgram::Uniform* createUniform (const char* uniformName)
     {
         if (context.extensions.glGetUniformLocation (shaderProgram->getProgramID(), uniformName) < 0)
@@ -217,6 +212,4 @@ protected:
     Array<GLuint> outputTexture;
     const int outputTextureNum;
 };
-
-
-#endif /* OpenGLDrawer_h */
+}

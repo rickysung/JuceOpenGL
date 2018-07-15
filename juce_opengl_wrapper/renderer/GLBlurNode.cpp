@@ -1,16 +1,12 @@
-/*
-  ==============================================================================
+//
+//  GaussianBlurRenderer.cpp
 
-    GlowRenderer.cpp
-    Created: 12 Oct 2017 2:34:59pm
-    Author:  Ricky
-
-  ==============================================================================
-*/
-
-#include "GlowRenderer.h"
-
-const char* GlowRenderer::getVertexShader()
+//  Created by Ricky on 2016. 8. 13..
+//
+//
+namespace juce{
+#include "GLBlurNode.h"
+const char* GLBlurNode::getVertexShader()
 {
     return
     "#version 330 core\n"
@@ -28,7 +24,7 @@ const char* GlowRenderer::getVertexShader()
     "    TexCoords = textureCoordIn;\n"
     "}";
 }
-const char* GlowRenderer::getFragmentShader()
+const char* GLBlurNode::getFragmentShader()
 {
     return
     "#version 330 core\n"
@@ -64,27 +60,18 @@ const char* GlowRenderer::getFragmentShader()
     "   FragColor = vec4(result / (blurLength + 1), 1.0);\n"
     "}";
 }
-GlowRenderer::GlowRenderer(OpenGLContext& glContext,
-                                           int screenWidth,
-                                           int screenHeight,
-                                           float amount) :
-OpenGLDrawer(glContext, screenWidth, screenHeight, 1),
-Amount(amount)
-{
-    glowArea = 1;
-}
-void GlowRenderer::initializeUniform()
+void GLBlurNode::initializeUniform()
 {
     CREATE_UNIFORM(image);// = createUniform("image");
     CREATE_UNIFORM(blurLength);// = createUniform("blurLength");
     CREATE_UNIFORM(isVertical);// = createUniform("isVertical");
 }
-void GlowRenderer::initializeBuffer()
+void GLBlurNode::initializeBuffer()
 {
     genFrameBuffer();
     genDoubleFrameBuffer();
 }
-void GlowRenderer::shutDownContext()
+void GLBlurNode::shutDownContext()
 {
     glDeleteTextures(outputTextureNum, outputTexture.getRawDataPointer());
     context.extensions.glDeleteRenderbuffers(1, &renderBuffer);
@@ -92,43 +79,37 @@ void GlowRenderer::shutDownContext()
     glDeleteTextures(2, pingpongBuffer);
     context.extensions.glDeleteFramebuffers(2, pingpongFBO);
 }
-void GlowRenderer::preDraw()
+GLBlurNode::GLBlurNode(OpenGLContext& glContext,
+                                     int screenWidth,
+                                     int screenHeight,
+                                     float amount) :
+GLRendererNode(glContext, screenWidth, screenHeight, 1),
+Amount(amount) {}
+void GLBlurNode::preDraw()
 {
     shaderProgram->use();
-    blurLength->set((float)glowArea);
+    blurLength->set(Amount);
     image->set(0);
     glViewport(0, 0, width, height);
+}
+void GLBlurNode::doDraw()
+{
     glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[0]);
     OpenGLHelpers::clear (Colour::greyLevel (0.1f));// Enable depth test
     isVertical->set(true);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, inputTexture);
     screenShape->draw();
-}
-void GlowRenderer::doDraw()
-{
-    int i;
-    int idx = 1;
-    bool vhflip = true;
-    for(i=0 ; i<10 ; i++)
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[idx]);
-        idx = 1 - idx;
-        vhflip = !vhflip;
-        OpenGLHelpers::clear (Colour::greyLevel (0.1f));// Enable depth test
-        isVertical->set(vhflip);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, pingpongBuffer[idx]);
-        screenShape->draw();
-    }
-}
-void GlowRenderer::postDraw()
-{
+
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
     OpenGLHelpers::clear (Colour::greyLevel (0.1f));// Enable depth test
     isVertical->set(false);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, pingpongBuffer[0]);
     screenShape->draw();
+}
+void GLBlurNode::postDraw()
+{
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 }

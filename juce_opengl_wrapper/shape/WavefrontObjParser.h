@@ -33,6 +33,7 @@
     Just call load() and if there aren't any errors, the 'modelObjects' array should
     be filled with all the modelObject objects that were loaded from the file.
 */
+namespace juce{
 class WavefrontObjFile
 {
 public:
@@ -370,3 +371,4 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavefrontObjFile)
 };
+}

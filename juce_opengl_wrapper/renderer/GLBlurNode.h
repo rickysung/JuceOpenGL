@@ -8,14 +8,12 @@
   ==============================================================================
 */
 
-#ifndef GAUSSIANBLURRENDERER_H_INCLUDED
-#define GAUSSIANBLURRENDERER_H_INCLUDED
-#include "../OpenGLDrawer.h"
-
-class GaussianBlurRenderer : public OpenGLDrawer
+#pragma once
+namespace juce{
+class GLBlurNode : public GLRendererNode
 {
 public:
-    GaussianBlurRenderer(OpenGLContext& glContext,
+    GLBlurNode(OpenGLContext& glContext,
                       int screenWidth,
                       int screenHeight,
                       float amount);
@@ -36,7 +34,7 @@ public:
             glBindTexture(GL_TEXTURE_2D, pingpongBuffer[i]);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
         }
-        OpenGLDrawer::resizeColorAttachment(w, h);
+        GLRendererNode::resizeColorAttachment(w, h);
     }
     
 private:
@@ -54,6 +52,4 @@ private:
     ScopedPointer<OpenGLShaderProgram::Uniform> isVertical;
 };
 
-
-
-#endif  // GAUSSIANBLURRENDERER_H_INCLUDED
+}

@@ -26,6 +26,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
 #include <juce_opengl/juce_opengl.h>
+#include <juce_opengl_wrapper/juce_opengl_wrapper.h>
 #include <juce_video/juce_video.h>
 
 #include "BinaryData.h"
